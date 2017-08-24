@@ -1,11 +1,12 @@
 package scalaworld.macros
 
 @Redactor
-class Test(i: Int)
+case class Test(i: Int, b: Boolean, c: Nested)
+
+case class Nested(n: String)
 
 object RedactorExample extends App {
 
-  Test.redact
-  val a = new Test(1)
+  val a = new Test(1, true, Nested("umm")).redact
   println(a)
 }

@@ -5,7 +5,8 @@ lazy val allSettings = Seq(
   scalaVersion := scala211,
   resolvers += Resolver.bintrayRepo("scalameta", "maven"),
   libraryDependencies ++= Seq(
-    "org.scalatest" %% "scalatest" % "3.0.1" % Test
+    "org.scalatest" %% "scalatest" % "3.0.1" % Test,
+    "org.scala-lang" % "scala-compiler" % scalaVersion.value % Test
   ),
   updateOptions := updateOptions.value.withCachedResolution(true)
 )
@@ -24,7 +25,8 @@ lazy val macros = project.settings(
   macroSettings,
   // only needed for @generic demo.
   libraryDependencies += "com.chuusai" %% "shapeless" % "2.3.2",
-  libraryDependencies += testkit       % Test
+  libraryDependencies += testkit       % Test,
+  libraryDependencies += "org.scala-lang" % "scala-compiler" % scalaVersion.value % Test
 )
 
 lazy val scalahostSettings = Seq(

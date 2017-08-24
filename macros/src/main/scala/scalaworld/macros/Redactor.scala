@@ -46,7 +46,7 @@ class Redactor extends StaticAnnotation {
         companion
     }
 
-    def redactArgs(ps: Seq[Term.Param]): Defn.Class = {
+    def redactArgs(ps: Seq[Term.Param]): Term = {
 
       val newParams: Seq[Term] = ps.map { param =>
         val nameTerm = Term.Name(param.name.value)
@@ -54,20 +54,22 @@ class Redactor extends StaticAnnotation {
           case t: Type.Name => param // simple type, e.g. Strings
           case t @ Type.Apply(Type.Name(tpeName), _) =>
         }
-        q""" $nameTerm = a.$nameTerm"""
+        q""" $nameTerm = instance.$nameTerm"""
       }
 
-      q"$tName($newParams)"
+      q"$typeTermName(..$newParams)"
     }
 
     val res = q"""
       ..$mods class $tName[..$tParams](...$paramss) extends $template
       object $typeTermName {
 
-        def redact: String = {
-            ${redactArgs(paramssFlat)}
-          ""
-        }
+        implicit class RedactOps(instance: $tCompleteType) {
+           def redact: String = {
+             ${redactArgs(paramssFlat)}
+             ""
+             }
+         }
       }"""
 
     println(res)
